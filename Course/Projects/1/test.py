@@ -6,7 +6,7 @@ Adapted for LOCAL MACHINE execution with automatic GPU/CPU detection
 Usage:
     python local_machine_toms.py
     python local_machine_toms.py --input my_data.json --output results.json
-    python local_machine_toms.py --student-model "Qwen/Qwen2.5-Coder-1.5B-Instruct" --teacher-model "Qwen/Qwen2.5-Coder-7B-Instruct"
+    python local_machine_toms.py --cache-dir ./model_cache
 """
 
 import json
@@ -29,9 +29,9 @@ DEFAULT_INPUT_JSON = "mini.json"
 DEFAULT_OUTPUT_JSON = "miniofsixty.json"
 DEFAULT_OUTPUT_CSV = "miniofsixty.csv"
 
-# Smaller models for local machines (can be overridden via CLI)
-DEFAULT_STUDENT_MODEL = "Qwen/Qwen2.5-Coder-1.5B-Instruct"  # Lightweight student
-DEFAULT_TEACHER_MODEL = "Qwen/Qwen2.5-Coder-7B-Instruct"     # Smaller teacher
+# Original models from cluster version
+DEFAULT_STUDENT_MODEL = "Qwen/Qwen2.5-Coder-7B-Instruct"
+DEFAULT_TEACHER_MODEL = "Qwen/Qwen3-Coder-30B-A3B-Instruct"
 
 DEFAULT_INTERVENTION_RATE = 1.00
 DEFAULT_RANDOM_SEED = 42
@@ -466,14 +466,11 @@ def parse_args():
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
-  # Basic usage with default models
+  # Basic usage
   python local_machine_toms.py
   
   # Custom input/output files
   python local_machine_toms.py --input my_data.json --output results.json
-  
-  # Use smaller models for less powerful hardware
-  python local_machine_toms.py --student-model "Qwen/Qwen2.5-Coder-1.5B-Instruct"
   
   # Force CPU execution
   python local_machine_toms.py --force-cpu
