@@ -26,8 +26,8 @@ from tqdm import tqdm
 # Default Configuration
 # =============================
 DEFAULT_INPUT_JSON = "mini.json"
-DEFAULT_OUTPUT_JSON = "miniofsixty.json"
-DEFAULT_OUTPUT_CSV = "miniofsixty.csv"
+DEFAULT_OUTPUT_JSON = "miniall.json"
+DEFAULT_OUTPUT_CSV = "miniall.csv"
 
 # Original models from cluster version
 DEFAULT_STUDENT_MODEL = "Qwen/Qwen2.5-Coder-7B-Instruct"
@@ -64,19 +64,19 @@ class HFChat:
             self.device = "cpu"
             device_map = {"": "cpu"}
             dtype = torch.float32
-            print("⚠️  Forced CPU mode")
+            print(" Forced CPU mode")
         elif torch.cuda.is_available():
             self.device = "cuda"
             device_map = "auto"
             dtype = torch.float16
-            print(f"✓ CUDA available - using GPU")
+            print(f" CUDA available - using GPU")
             print(f"  GPU: {torch.cuda.get_device_name(0)}")
             print(f"  VRAM: {torch.cuda.get_device_properties(0).total_memory / 1024**3:.1f} GB")
         else:
             self.device = "cpu"
             device_map = {"": "cpu"}
             dtype = torch.float32
-            print("⚠️  CUDA not available - using CPU (this will be slower)")
+            print(" CUDA not available - using CPU (this will be slower)")
         
         if cache_dir:
             print(f"Cache directory: {cache_dir}")
@@ -101,7 +101,7 @@ class HFChat:
                 low_cpu_mem_usage=True,  # More memory efficient
             )
         except Exception as e:
-            print(f"❌ Error loading model: {e}")
+            print(f" Error loading model: {e}")
             print("\nTips:")
             print("  1. Try a smaller model (use --student-model and --teacher-model flags)")
             print("  2. Make sure you have enough RAM/VRAM")
@@ -572,13 +572,13 @@ def main() -> None:
     try:
         with open(args.input, "r", encoding="utf-8") as f:
             data = json.load(f)
-        print(f"✓ Loaded {len(data)} examples\n")
+        print(f" Loaded {len(data)} examples\n")
     except FileNotFoundError:
-        print(f"❌ Error: Input file '{args.input}' not found")
+        print(f"Error: Input file '{args.input}' not found")
         print(f"Please make sure the file exists in the current directory")
         sys.exit(1)
     except json.JSONDecodeError as e:
-        print(f"❌ Error: Invalid JSON in '{args.input}'")
+        print(f" Error: Invalid JSON in '{args.input}'")
         print(f"   {e}")
         sys.exit(1)
 
@@ -604,7 +604,7 @@ def main() -> None:
             force_cpu=args.force_cpu
         )
     except Exception as e:
-        print(f"\n❌ Failed to initialize models")
+        print(f"\n Failed to initialize models")
         print(f"Error: {e}")
         sys.exit(1)
 
@@ -703,7 +703,7 @@ def main() -> None:
             records.append(record)
     
     except KeyboardInterrupt:
-        print("\n\n⚠️  Interrupted by user")
+        print("\n\nInterrupted by user")
         print(f"Processed {len(records)}/{n} examples before interruption")
         if len(records) > 0:
             save_partial = input("Save partial results? (y/n): ").strip().lower()
@@ -711,7 +711,7 @@ def main() -> None:
                 print("Exiting without saving...")
                 sys.exit(1)
     except Exception as e:
-        print(f"\n❌ Error during processing: {e}")
+        print(f"\nError during processing: {e}")
         import traceback
         traceback.print_exc()
         sys.exit(1)
@@ -732,7 +732,7 @@ def main() -> None:
             json.dump(records, f, indent=2, ensure_ascii=False)
         print(f"✓ JSON saved: {args.output}")
     except Exception as e:
-        print(f"❌ Error saving JSON: {e}")
+        print(f"Error saving JSON: {e}")
 
     # Save CSV
     try:
@@ -747,7 +747,7 @@ def main() -> None:
         df_out.to_csv(args.output_csv, index=False, encoding="utf-8")
         print(f"✓ CSV saved: {args.output_csv}")
     except Exception as e:
-        print(f"❌ Error saving CSV: {e}")
+        print(f" Error saving CSV: {e}")
     
     # Print summary
     print("\n" + "=" * 60)
@@ -759,7 +759,7 @@ def main() -> None:
     print(f"\nOutput files:")
     print(f"  - {args.output}")
     print(f"  - {args.output_csv}")
-    print("\n✓ Done!")
+    print("\n Done!")
 
 
 if __name__ == "__main__":
