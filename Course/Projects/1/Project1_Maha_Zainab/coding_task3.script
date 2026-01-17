@@ -1,0 +1,137 @@
+Script started on 2026-01-17 02:05:40+00:00 [TERM="xterm-256color" TTY="/dev/pts/0" COLUMNS="150" LINES="39"]
+]666;vte.shell.postexec=0\]7;file://Ubuntu/home/maha\]0;maha@Ubuntu:~\]666;vte.shell.precmd!\[?2004h]0;maha@Ubuntu: ~[01;32mmaha@Ubuntu[00m:[01;34m~[00m$ gcc -g -o-[K simple simple.c -lm
+[?2004l]133;C\]666;vte.shell.preexec!\]666;vte.shell.postexec=0\]7;file://Ubuntu/home/maha\]0;maha@Ubuntu:~\]666;vte.shell.precmd!\[?2004h]0;maha@Ubuntu: ~[01;32mmaha@Ubuntu[00m:[01;34m~[00m$ ./simple
+[?2004l]133;C\]666;vte.shell.preexec!\Final average of the square root numbers=5.779427
+]666;vte.shell.postexec=0\]7;file://Ubuntu/home/maha\]0;maha@Ubuntu:~\]666;vte.shell.precmd!\[?2004h]0;maha@Ubuntu: ~[01;32mmaha@Ubuntu[00m:[01;34m~[00m$ man ldd
+[?2004l]133;C\]666;vte.shell.preexec!\[?1049h[22;0;0t[39;1H[?1h=[4mldd[24m(1)                                                         General Commands Manual                                                         [4mldd[24m(1)[m
+[m
+[1mNAME[0m[m
+       ldd - print shared object dependencies[m
+[m
+[1mSYNOPSIS[0m[m
+       [1mldd [22m[[4moption[24m]... [4mfile[24m...[m
+[m
+[1mDESCRIPTION[0m[m
+       [1mldd  [22mprints  the shared objects (shared libraries) required by each program or shared object specified on the command line.  An example of its[m
+       use and output is the following:[m
+[m
+           $ [1mldd /bin/ls[0m[m
+               linux-vdso.so.1 (0x00007ffcc3563000)[m
+               libselinux.so.1 => /lib64/libselinux.so.1 (0x00007f87e5459000)[m
+               libcap.so.2 => /lib64/libcap.so.2 (0x00007f87e5254000)[m
+               libc.so.6 => /lib64/libc.so.6 (0x00007f87e4e92000)[m
+               libpcre.so.1 => /lib64/libpcre.so.1 (0x00007f87e4c22000)[m
+               libdl.so.2 => /lib64/libdl.so.2 (0x00007f87e4a1e000)[m
+               /lib64/ld-linux-x86-64.so.2 (0x00005574bf12e000)[m
+               libattr.so.1 => /lib64/libattr.so.1 (0x00007f87e4817000)[m
+               libpthread.so.0 => /lib64/libpthread.so.0 (0x00007f87e45fa000)[m
+[m
+       In the usual case, [1mldd [22minvokes the standard dynamic linker (see [1mld.so[22m(8)) with the [1mLD_TRACE_LOADED_OBJECTS  [22menvironment  variable  set  to  1.[m
+       This causes the dynamic linker to inspect the program's dynamic dependencies, and find (according to the rules described in [1mld.so[22m(8)) and load[m
+       the  objects that satisfy those dependencies.  For each dependency, [1mldd [22mdisplays the location of the matching object and the (hexadecimal) ad‐[m
+       dress at which it is loaded.  (The [4mlinux-vdso[24m and [4mld-linux[24m shared dependencies are special; see [1mvdso[22m(7) and [1mld.so[22m(8).)[m
+[m
+   [1mSecurity[0m[m
+       Be aware that in some circumstances (e.g., where the program specifies an ELF interpreter other than [4mld-linux.so[24m), some versions  of  [1mldd  [22mmay[m
+       attempt  to  obtain the dependency information by attempting to directly execute the program, which may lead to the execution of whatever code[m
+       is defined in the program's ELF interpreter, and perhaps to execution of the program itself.  (Before glibc 2.27, the upstream [1mldd [22mimplementa‐[m
+       tion did this for example, although most distributions provided a modified version that did not.)[m
+[m
+       Thus, you should [4mnever[24m employ [1mldd [22mon an untrusted executable, since this may result in the execution of arbitrary code.  A  safer  alternative[m
+       when dealing with untrusted executables is:[m
+[m
+           $ [1mobjdump -p /path/to/program | grep NEEDED[0m[m
+[7m Manual page ldd(1) line 1 (press h for help or q to quit)[27m[K[K[?1l>[?1049l[23;0;0t]666;vte.shell.postexec=0\]7;file://Ubuntu/home/maha\]0;maha@Ubuntu:~\]666;vte.shell.precmd!\[?2004h]0;maha@Ubuntu: ~[01;32mmaha@Ubuntu[00m:[01;34m~[00m$ lld simple
+[?2004l]133;C\]666;vte.shell.preexec!\Command 'lld' not found, but can be installed with:
+sudo apt install lld
+]666;vte.shell.postexec=127\]7;file://Ubuntu/home/maha\]0;maha@Ubuntu:~\]666;vte.shell.precmd!\[?2004h]0;maha@Ubuntu: ~[01;32mmaha@Ubuntu[00m:[01;34m~[00m$ ldd simple
+[?2004l]133;C\]666;vte.shell.preexec!\	linux-vdso.so.1 (0x000077ef4fc2e000)
+	libm.so.6 => /lib/x86_64-linux-gnu/libm.so.6 (0x000077ef4fb05000)
+	libc.so.6 => /lib/x86_64-linux-gnu/libc.so.6 (0x000077ef4f800000)
+	/lib64/ld-linux-x86-64.so.2 (0x000077ef4fc30000)
+]666;vte.shell.postexec=0\]7;file://Ubuntu/home/maha\]0;maha@Ubuntu:~\]666;vte.shell.precmd!\[?2004h]0;maha@Ubuntu: ~[01;32mmaha@Ubuntu[00m:[01;34m~[00m$ gcc -g simple.c -o simple -lm
+[?2004l]133;C\]666;vte.shell.preexec!\]666;vte.shell.postexec=0\]7;file://Ubuntu/home/maha\]0;maha@Ubuntu:~\]666;vte.shell.precmd!\[?2004h]0;maha@Ubuntu: ~[01;32mmaha@Ubuntu[00m:[01;34m~[00m$ ./simple
+[?2004l]133;C\]666;vte.shell.preexec!\Final average of the square root numbers=5.779427
+]666;vte.shell.postexec=0\]7;file://Ubuntu/home/maha\]0;maha@Ubuntu:~\]666;vte.shell.precmd!\[?2004h]0;maha@Ubuntu: ~[01;32mmaha@Ubuntu[00m:[01;34m~[00m$ vim .gdbinit
+[?2004l]133;C\]666;vte.shell.preexec!\[?1049h[22;0;0t[>4;2m[?1h=[?2004h[?1004h[1;39r[?12h[?12l[22;2t[22;1t[27m[23m[29m[m[H[2J[?25l[39;1H".gdbinit" [New][2;1H▽[6n[2;1H  [3;1HPzz\[0%m[6n[3;1H           [1;1H[>c]10;?]11;?[2;1H[94m~                                                                                                                                                     [3;1H~                                                                                                                                                     [4;1H~                                                                                                                                                     [5;1H~                                                                                                                                                     [6;1H~                                                                                                                                                     [7;1H~                                                                                                                                                     [8;1H~                                                                                                                                                     [9;1H~                                                                                                                                                     [10;1H~                                                                                                                                                     [11;1H~                                                                                                                                                     [12;1H~                                                                                                                                                     [13;1H~                                                                                                                                                     [14;1H~                                                                                                                                                     [15;1H~                                                                                                                                                     [16;1H~                                                                                                                                                     [17;1H~                                                                                                                                                     [18;1H~                                                                                                                                                     [19;1H~                                                                                                                                                     [20;1H~                                                                                                                                                     [21;1H~                                                                                                                                                     [22;1H~                                                                                                                                                     [23;1H~                                                                                                                                                     [24;1H~                                                                                                                                                     [25;1H~                                                                                                                                                     [26;1H~                                                                                                                                                     [27;1H~                                                                                                                                                     [28;1H~                                                                                                                                                     [29;1H~                                                                                                                                                     [30;1H~                                                                                                                                                     [31;1H~                                                                                                                                                     [32;1H~                                                                                                                                                     [33;1H~                                                                                                                                                     [34;1H~                                                                                                                                                     [35;1H~                                                                                                                                                     [36;1H~                                                                                                                                                     [37;1H~                                                                                                                                                     [38;1H~                                                                                                                                                     [m[39;133H0,0-1[9CAll[1;1H[?25h[?4mP+q436f\P+q6b75\P+q6b64\P+q6b72\P+q6b6c\P+q2332\P+q2334\P+q2569\P+q2a37\P+q6b31\P$q q\[?12$p[27m[23m[29m[m[H[2J[?25l[2;1H[94m~                                                                                                                                                     [3;1H~                                                                                                                                                     [4;1H~                                                                                                                                                     [5;1H~                                                                                                                                                     [6;1H~                                                                                                                                                     [7;1H~                                                                                                                                                     [8;1H~                                                                                                                                                     [9;1H~                                                                                                                                                     [10;1H~                                                                                                                                                     [11;1H~                                                                                                                                                     [12;1H~                                                                                                                                                     [13;1H~                                                                                                                                                     [14;1H~                                                                                                                                                     [15;1H~                                                                                                                                                     [16;1H~                                                                                                                                                     [17;1H~                                                                                                                                                     [18;1H~                                                                                                                                                     [19;1H~                                                                                                                                                     [20;1H~                                                                                                                                                     [21;1H~                                                                                                                                                     [22;1H~                                                                                                                                                     [23;1H~                                                                                                                                                     [24;1H~                                                                                                                                                     [25;1H~                                                                                                                                                     [26;1H~                                                                                                                                                     [27;1H~                                                                                                                                                     [28;1H~                                                                                                                                                     [29;1H~                                                                                                                                                     [30;1H~                                                                                                                                                     [31;1H~                                                                                                                                                     [32;1H~                                                                                                                                                     [33;1H~                                                                                                                                                     [34;1H~                                                                                                                                                     [35;1H~                                                                                                                                                     [36;1H~                                                                                                                                                     [37;1H~                                                                                                                                                     [38;1H~                                                                                                                                                     [m[39;133H0,0-1[9CAll".gdbinit" [New][1;1H[?25hP+q6b32\P+q6b33\P+q6b34\P+q6b35\P+q6b36\P+q6b37\P+q6b38\P+q6b39\P+q6b3b\P+q4631\[?25l[39;123H^[[1;1H[39;125H[[1;1H[39;126H?[1;1H[39;127H1[1;1H[39;128H2[1;1H[39;123H      [1;1H[?25hP+q4632\P+q2531\P+q2638\P+q6b62\P+q6b49\P+q6b44\P+q6b68\P+q4037\[?25l[39;123H^[[1;1H[39;125HP[1;1H[39;126H0[1;1H[39;127H+[1;1H[39;128Hr[1;1H[39;129H^[[1;1H[39;123H        [1;1HP+q6b50\P+q6b4e\[?25hP+q4b31\P+q4b33\P+q4b34\P+q4b35\P+q6b42\P+q5053\P+q5045\[?25l[39;123Hf[1;1H[?25h[?25l[39;124Hi[1;1H[39;123H  [1;1H[?25h[?25l[39;123Hl[1;1H[39;123H [1;1H[?25h[?25l[39;123He[1;1H[39;123H [1;1H[?25h[?25l[39;123Hi[1;1H[39;123H [1;1H[39;1H[1m-- INSERT --[m[39;13H[K[39;133H0,1[11CAll[1;1H[?25h[?25lf[39;133H1,2[1;2H[?25h[?25li[39;135H3[1;3H[?25h[?25ll[39;135H4[1;4H[?25h[?25l[93mfile[m[39;135H5[1;5H[?25h[?25l[39;135H6[1;6H[?25h[?25ls[39;135H7[1;7H[?25h[?25li[39;135H8[1;8H[?25h[?25lm[39;135H9[1;9H[?25h[?25lp[39;135H10[1;10H[?25h[?25ll[39;136H1[1;11H[?25h[?25le[39;136H2[1;12H[?25h[?25l[2;1H[K[39;133H2,1 [2;1H[?25h[?25lb[39;135H2[2;2H[?25h[?25lr[39;135H3[2;3H[?25h[?25le[39;135H4[2;4H[?25h[?25la[39;135H5[2;5H[?25h[?25l[93mbreak[m[39;135H6[2;6H[?25h[?25l[39;135H7[2;7H[?25h[?25lm[39;135H8[2;8H[?25h[?25la[39;135H9[2;9H[?25h[?25li[39;135H10[2;10H[?25h[?25ln[39;136H1[2;11H[?25h[?25l[3;1H[K[39;133H3,1 [3;1H[?25h[?25lb[39;135H2[3;2H[?25h[?25lr[39;135H3[3;3H[?25h[?25le[39;135H4[3;4H[?25h[?25la[39;135H5[3;5H[?25h[?25l[93mbreak[m[39;135H6[3;6H[?25h[?25l[39;135H7[3;7H[?25h[?25ls[39;135H8[3;8H[?25h[?25lq[39;135H9[3;9H[?25h[?25lr[39;135H10[3;10H[?25h[?25lt[39;136H1[3;11H[?25h[?25l[4;1H[K[39;133H4,1 [4;1H[?25h[?25li[39;135H2[4;2H[?25h[?25ln[39;135H3[4;3H[?25h[?25lf[39;135H4[4;4H[?25h[?25l[93minfo[m[39;135H5[4;5H[?25h[?25lr[39;135H6[4;6H[?25h[?25l[4;5H[K[39;135H5[4;5H[?25h[?25l[39;135H6[4;6H[?25h[?25lr[39;135H7[4;7H[?25h[?25le[39;135H8[4;8H[?25h[?25lg[39;135H9[4;9H[?25h[?25li[39;135H10[4;10H[?25h[?25ls[39;136H1[4;11H[?25h[?25lt[39;136H2[4;12H[?25h[?25le[39;136H3[4;13H[?25h[?25lr[39;136H4[4;14H[?25h[?25l[4;6H[38;5;121mregisters[m[39;136H5[4;15H[?25h[39;1H[K[4;14H[?25l[39;123H^[[4;14H[39;123H  [4;15H[39;133H4,14[10CAll[4;14H[?25h[?25l[39;123H:[4;14H[39;123H[K[39;1H:[?25hwq[?25l[?2004l[>4;m".gdbinit" [New] 4L, 49B written[23;2t[23;1t
+[?1004l[?2004l[?1l>[?1049l[23;0;0t[?25h[>4;m]666;vte.shell.postexec=0\]7;file://Ubuntu/home/maha\]0;maha@Ubuntu:~\]666;vte.shell.precmd!\[?2004h]0;maha@Ubuntu: ~[01;32mmaha@Ubuntu[00m:[01;34m~[00m$ ls -a
+[?2004l]133;C\]666;vte.shell.preexec!\[0m[01;34m.[0m              .bash_logout  [01;34m.config[0m   [01;34m.local[0m        [01;34m.ssh[0m      [01;34mDesktop[0m    [01;34mMusic[0m     [01;34mTemplates[0m       coding_task3.script  [01;34msnap[0m
+[01;34m..[0m             .bashrc       .gdbinit  .profile      [38;5;8m.swp[0m      [01;34mDocuments[0m  [01;34mPictures[0m  [01;34mVideos[0m          [01;32msimple[0m
+.bash_history  [01;34m.cache[0m        [01;34m.gnupg[0m    [38;5;8m.simple..swp[0m  .viminfo  [01;34mDownloads[0m  [01;34mPublic[0m    code_Q3.script  simple.c
+]666;vte.shell.postexec=0\]7;file://Ubuntu/home/maha\]0;maha@Ubuntu:~\]666;vte.shell.precmd!\[?2004h]0;maha@Ubuntu: ~[01;32mmaha@Ubuntu[00m:[01;34m~[00m$ gdb
+[?2004l]133;C\]666;vte.shell.preexec!\[35;1mGNU gdb (Ubuntu 16.3-1ubuntu2) 16.3[m
+Copyright (C) 2024 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <[32mhttp://gnu.org/licenses/gpl.html[m>
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+Type "[1mshow copying[m" and "[1mshow warranty[m" for details.
+This GDB was configured as "x86_64-linux-gnu".
+Type "[1mshow configuration[m" for configuration details.
+For bug reporting instructions, please see:
+[32m<https://www.gnu.org/software/gdb/bugs/>[m.
+Find the GDB manual and other documentation resources online at:
+    <[32mhttp://www.gnu.org/software/gdb/documentation/[m>.
+
+For help, type "[1mhelp[m".
+Type "[1mapropos word[m" to search for commands related to "word".
+Breakpoint 1 at [34m0x1195[m: file [32msimple.c[m, line [2m4[m.
+Breakpoint 2 at [34m0x1090[m
+/home/maha/.gdbinit:4: Error in sourced command file:
+The program has no registers now.
+[?2004h(gdb) r
+[?2004lStarting program: [32m/home/maha/simple[m 
+
+This GDB supports auto-downloading debuginfo from the following URLs:
+  <[32mhttps://debuginfod.ubuntu.com[m>
+[?2004hEnable debuginfod for this session? (y or [n]) y
+[?2004lDebuginfod has been enabled.
+To make this setting permanent, add 'set debuginfod enabled on' to .gdbinit.
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library "[32m/lib/x86_64-linux-gnu/libthread_db.so.1[m".
+Download failed: Invalid argument.  Continuing without source file [32m./math/./math/w_sqrt_compat.c[m.
+
+Breakpoint 1, [33mmain[m () at [32msimple.c[m:[2m4[m
+[2m4[m	[32mint[m [01mmain[m[31m()[m[31m{[m
+[?2004h[?2004l[?2004h(gdb) n
+[?2004l[2m5[m	[32mdouble[m numbers[31m[[m[35m10[m[31m]=[m[31m{[m[35m27[m[31m,[m[35m56[m[31m,[m[35m88[m[31m,[m[35m12[m[31m,[m[35m35[m[31m,[m[35m5[m[31m,[m[35m61[m[31m,[m[35m68[m[31m,[m[35m24[m[31m,[m[35m10[m[31m}[m[31m;[m
+[?2004h[?2004l[?2004h(gdb) n
+[?2004l[2m6[m	[32mdouble[m sum[31m=[m[35m0.0[m[31m;[m
+[?2004h[?2004l[?2004h(gdb) n
+[?2004l[2m9[m	[01;34mfor[m[31m([mi[31m=[m[35m0[m[31m;[m i[31m<[m[35m10[m[31m;[mi[31m++)[m[31m{[m
+[?2004h[?2004l[?2004h(gdb) n
+[?2004l[2m10[m	sum [31m+=[m[01msqrt[m[31m([mnumbers[31m[[mi[31m]);[m
+[?2004h[?2004l[?2004h(gdb) n
+[?2004lDownload failed: Invalid argument.  Continuing without source file [32m./math/./math/w_sqrt_compat.c[m.
+
+Breakpoint 2, [33m__sqrt[m ([36mx[m=27) at [32m./math/w_sqrt_compat.c[m:[2m34[m
+warning: 34	[32m./math/w_sqrt_compat.c[m: No such file or directory
+[?2004h[?2004l[?2004h(gdb) r
+[?2004l[?2004hThe program being debugged has been started already.
+Start it from the beginning? (y or n) y
+[?2004lStarting program: [32m/home/maha/simple[m 
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library "[32m/lib/x86_64-linux-gnu/libthread_db.so.1[m".
+Download failed: Invalid argument.  Continuing without source file [32m./math/./math/w_sqrt_compat.c[m.
+
+Breakpoint 1, [33mmain[m () at [32msimple.c[m:[2m4[m
+[2m4[m	[32mint[m [01mmain[m[31m()[m[31m{[m
+[?2004h[?2004l[?2004h(gdb) r[Kc
+[?2004lContinuing.
+Download failed: Invalid argument.  Continuing without source file [32m./math/./math/w_sqrt_compat.c[m.
+
+Breakpoint 2, [33m__sqrt[m ([36mx[m=27) at [32m./math/w_sqrt_compat.c[m:[2m34[m
+warning: 34	[32m./math/w_sqrt_compat.c[m: No such file or directory
+[?2004h[?2004l[?2004h(gdb) n
+[?2004l[2m35[m	in [32m./math/w_sqrt_compat.c[m
+[?2004h[?2004l[?2004h(gdb) n
+[?2004l[2m38[m	in [32m./math/w_sqrt_compat.c[m
+[?2004h[?2004l[?2004h(gdb) q
+[?2004l[?2004hA debugging session is active.
+
+	Inferior 1 [process 8185] will be killed.
+
+Quit anyway? (y or n) e[Kq[Ky
+[?2004l]666;vte.shell.postexec=0\]7;file://Ubuntu/home/maha\]0;maha@Ubuntu:~\]666;vte.shell.precmd!\[?2004h]0;maha@Ubuntu: ~[01;32mmaha@Ubuntu[00m:[01;34m~[00m$ exit
+[?2004l]133;C\]666;vte.shell.preexec!\exit
+
+Script done on 2026-01-17 02:21:16+00:00 [COMMAND_EXIT_CODE="0"]

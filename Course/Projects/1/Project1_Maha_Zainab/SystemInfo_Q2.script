@@ -1,0 +1,226 @@
+Script started on 2026-01-17 01:02:10+00:00 [TERM="xterm-256color" TTY="/dev/pts/2" COLUMNS="114" LINES="37"]
+[?2004h]0;root@Ubuntu: /home/maha/Desktoproot@Ubuntu:/home/maha/Desktop# more /proc/cpuinfo
+[?2004lprocessor	: 0
+vendor_id	: GenuineIntel
+cpu family	: 6
+model		: 140
+model name	: 11th Gen Intel(R) Core(TM) i7-1165G7 @ 2.80GHz
+stepping	: 1
+microcode	: 0xffffffff
+cpu MHz		: 2803.208
+cache size	: 12288 KB
+physical id	: 0
+siblings	: 3
+core id		: 0
+cpu cores	: 3
+apicid		: 0
+initial apicid	: 0
+fpu		: yes
+fpu_exception	: yes
+cpuid level	: 22
+wp		: yes
+flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse
+2 ht syscall nx rdtscp lm constant_tsc rep_good nopl xtopology nonstop_tsc cpuid tsc_known_freq pni pclmulqdq ssse
+3 fma cx16 pcid sse4_1 sse4_2 movbe popcnt aes xsave avx f16c rdrand hypervisor lahf_lm abm 3dnowprefetch ibrs_enh
+anced fsgsbase bmi1 avx2 bmi2 invpcid rdseed adx clflushopt sha_ni arat md_clear flush_l1d arch_capabilities
+bugs		: spectre_v1 spectre_v2 spec_store_bypass swapgs retbleed eibrs_pbrsb gds bhi spectre_v2_user its 
+its_native_only
+bogomips	: 5606.41
+clflush size	: 64
+cache_alignment	: 64
+address sizes	: 39 bits physical, 48 bits virtual
+power management:
+
+processor	: 1
+vendor_id	: GenuineIntel
+cpu family	: 6
+model		: 140
+model name	: 11th Gen Intel(R) Core(TM) i7-1165G7 @ 2.80GHz
+[7m--More--[27mstepping	: 1
+[7m--More--[27mmicrocode	: 0xffffffff
+[7m--More--[27m[K[?2004h]0;root@Ubuntu: /home/maha/Desktoproot@Ubuntu:/home/maha/Desktop# more /proc/meminfo
+[?2004lMemTotal:        7937804 kB
+MemFree:         3463524 kB
+MemAvailable:    5989044 kB
+Buffers:           65144 kB
+Cached:          2728060 kB
+SwapCached:            0 kB
+Active:          2789536 kB
+Inactive:        1264744 kB
+Active(anon):    1357228 kB
+Inactive(anon):        0 kB
+Active(file):    1432308 kB
+Inactive(file):  1264744 kB
+Unevictable:          16 kB
+Mlocked:              16 kB
+SwapTotal:             0 kB
+SwapFree:              0 kB
+Zswap:                 0 kB
+Zswapped:              0 kB
+Dirty:                12 kB
+Writeback:             0 kB
+AnonPages:       1261256 kB
+Mapped:           471296 kB
+Shmem:             96416 kB
+KReclaimable:      97132 kB
+Slab:             278848 kB
+SReclaimable:      97132 kB
+SUnreclaim:       181716 kB
+KernelStack:       11120 kB
+PageTables:        25500 kB
+SecPageTables:         0 kB
+NFS_Unstable:          0 kB
+Bounce:                0 kB
+WritebackTmp:          0 kB
+CommitLimit:     3968900 kB
+Committed_AS:    6449868 kB
+VmallocTotal:   34359738367 kB
+[7m--More--[27m[K[?2004h]0;root@Ubuntu: /home/maha/Desktoproot@Ubuntu:/home/maha/Desktop# /sbin/[K]0;root@Ubuntu: /home/maha/Desktoproot@Ubuntu:/home/maha/Desktop# /sbin/[K]0;root@Ubuntu: /home/maha/Desktoproot@Ubuntu:/home/maha/Desktop# /sbin/lspci
+[?2004lbash: /sbin/lspci: No such file or directory
+[?2004h]0;root@Ubuntu: /home/maha/Desktoproot@Ubuntu:/home/maha/Desktop# lspci
+[?2004l00:00.0 Host bridge: Intel Corporation 440FX - 82441FX PMC [Natoma] (rev 02)
+00:01.0 ISA bridge: Intel Corporation 82371SB PIIX3 ISA [Natoma/Triton II]
+00:01.1 IDE interface: Intel Corporation 82371AB/EB/MB PIIX4 IDE (rev 01)
+00:02.0 VGA compatible controller: VMware SVGA II Adapter
+00:03.0 Ethernet controller: Intel Corporation 82540EM Gigabit Ethernet Controller (rev 02)
+00:04.0 System peripheral: InnoTek Systemberatung GmbH VirtualBox Guest Service
+00:05.0 Multimedia audio controller: Intel Corporation 82801AA AC'97 Audio Controller (rev 01)
+00:06.0 USB controller: Apple Inc. KeyLargo/Intrepid USB
+00:07.0 Bridge: Intel Corporation 82371AB/EB/MB PIIX4 ACPI (rev 08)
+00:0b.0 USB controller: Intel Corporation 82801FB/FBM/FR/FW/FRW (ICH6 Family) USB2 EHCI Controller
+00:0d.0 SATA controller: Intel Corporation 82801HM/HEM (ICH8M/ICH8M-E) SATA Controller [AHCI mode] (rev 02)
+[?2004h]0;root@Ubuntu: /home/maha/Desktoproot@Ubuntu:/home/maha/Desktop# [K]0;root@Ubuntu: /home/maha/Desktoproot@Ubuntu:/home/maha/Desktop# [K]0;root@Ubuntu: /home/maha/Desktoproot@Ubuntu:/home/maha/Desktop# ethtool eth0
+[?2004lnetlink error: no device matches name (offset 24)
+netlink error: No such device
+netlink error: no device matches name (offset 24)
+netlink error: No such device
+netlink error: no device matches name (offset 24)
+netlink error: No such device
+netlink error: no device matches name (offset 24)
+netlink error: No such device
+netlink error: no device matches name (offset 24)
+netlink error: No such device
+netlink error: no device matches name (offset 24)
+netlink error: No such device
+netlink error: no device matches name (offset 24)
+netlink error: No such device
+No data available
+[?2004h]0;root@Ubuntu: /home/maha/Desktoproot@Ubuntu:/home/maha/Desktop# ip a
+[?2004l1: [36mlo: [0m<LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+    link/loopback [33m00:00:00:00:00:00[0m brd [33m00:00:00:00:00:00[0m
+    inet [35m127.0.0.1[0m/8 scope host lo
+       valid_lft forever preferred_lft forever
+    inet6 [34m::1[0m/128 scope host noprefixroute 
+       valid_lft forever preferred_lft forever
+2: [36menp0s3: [0m<BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc fq_codel state [32mUP [0mgroup default qlen 1000
+    link/ether [33m08:00:27:51:36:48[0m brd [33mff:ff:ff:ff:ff:ff[0m
+    inet [35m10.0.2.15[0m/24 brd [35m10.0.2.255 [0mscope global dynamic noprefixroute enp0s3
+       valid_lft 84754sec preferred_lft 84754sec
+    inet6 [34mfd17:625c:f037:2:a00:27ff:fe51:3648[0m/64 scope global dynamic noprefixroute 
+       valid_lft 86104sec preferred_lft 14104sec
+    inet6 [34mfe80::a00:27ff:fe51:3648[0m/64 scope link noprefixroute 
+       valid_lft forever preferred_lft forever
+[?2004h]0;root@Ubuntu: /home/maha/Desktoproot@Ubuntu:/home/maha/Desktop# etg[Khtool enp)s[K[K)[K0s3
+[?2004lSettings for enp0s3:
+	Supported ports: [ TP ]
+	Supported link modes:   10baseT/Half 10baseT/Full
+	                        100baseT/Half 100baseT/Full
+	                        1000baseT/Full
+	Supported pause frame use: No
+	Supports auto-negotiation: Yes
+	Supported FEC modes: Not reported
+	Advertised link modes:  10baseT/Half 10baseT/Full
+	                        100baseT/Half 100baseT/Full
+	                        1000baseT/Full
+	Advertised pause frame use: No
+	Advertised auto-negotiation: Yes
+	Advertised FEC modes: Not reported
+	Speed: 1000Mb/s
+	Duplex: Full
+	Auto-negotiation: on
+	Port: Twisted Pair
+	PHYAD: 0
+	Transceiver: internal
+	MDI-X: off (auto)
+	Supports Wake-on: umbg
+	Wake-on: d
+        Current message level: 0x00000007 (7)
+                               drv probe link
+	Link detected: yes
+[?2004h]0;root@Ubuntu: /home/maha/Desktoproot@Ubuntu:/home/maha/Desktop# ifconfig enp0s3
+[?2004lCommand 'ifconfig' not found, but can be installed with:
+apt install net-tools
+[?2004h]0;root@Ubuntu: /home/maha/Desktoproot@Ubuntu:/home/maha/Desktop# sub[Kdo apt install net-tools
+[?2004lReading package lists... 0%Reading package lists... 100%                              Building dependency tree... 0%Building dependency tree... 0%Building dependency tree... 50%Building dependency tree... 50%                                Reading state information... 0%Reading state information... 0%                                Solving dependencies... 0%Solving dependencies... 10%                            The following packages were automatically installed and are no longer required:
+  linux-headers-6.17.0-5          linux-modules-6.17.0-5-generic  linux-tools-6.17.0-5-generic
+  linux-headers-6.17.0-5-generic  linux-tools-6.17.0-5
+Use 'sudo apt autoremove' to remove them.
+
+Installing:
+[32m  net-tools
+[0m
+Summary:
+  Upgrading: 0, Installing: 1, Removing: 0, Not Upgrading: 74
+  Download size: 208 kB
+  Space needed: 836 kB / 17.7 GB available
+
+[33m0% [Working][0m            Get:1 http://us.archive.ubuntu.com/ubuntu questing/main amd64 net-tools amd64 2.10-1.3ubuntu2 [208 kB]
+[33m5% [1 net-tools 14.0 kB/208 kB 7%][0m[33m                                  100% [Working][0m              Fetched 208 kB in 0s (456 kB/s)
+
+7[0;36r8[1ASelecting previously unselected package net-tools.
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 193650 files and directories currently installed.)
+Preparing to unpack .../net-tools_2.10-1.3ubuntu2_amd64.deb ...
+7[37;0f[42m[30mProgress: [  0%][49m[39m [                                                                                            ] 87[37;0f[42m[30mProgress: [ 20%][49m[39m [██████████████████▍                                                                         ] 8Unpacking net-tools (2.10-1.3ubuntu2) ...
+7[37;0f[42m[30mProgress: [ 40%][49m[39m [████████████████████████████████████▊                                                       ] 8Setting up net-tools (2.10-1.3ubuntu2) ...
+7[37;0f[42m[30mProgress: [ 60%][49m[39m [███████████████████████████████████████████████████████▏                                    ] 87[37;0f[42m[30mProgress: [ 80%][49m[39m [█████████████████████████████████████████████████████████████████████████▌                  ] 8Processing triggers for man-db (2.13.1-1) ...
+
+7[0;37r8[1A[J[?2004h]0;root@Ubuntu: /home/maha/Desktoproot@Ubuntu:/home/maha/Desktop# sudo apt install net-tools[11Pifconfig enp0s3
+[?2004lenp0s3: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
+        inet 10.0.2.15  netmask 255.255.255.0  broadcast 10.0.2.255
+        inet6 fd17:625c:f037:2:a00:27ff:fe51:3648  prefixlen 64  scopeid 0x0<global>
+        inet6 fe80::a00:27ff:fe51:3648  prefixlen 64  scopeid 0x20<link>
+        ether 08:00:27:51:36:48  txqueuelen 1000  (Ethernet)
+        RX packets 40441  bytes 58452348 (58.4 MB)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 3311  bytes 346532 (346.5 KB)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+[?2004h]0;root@Ubuntu: /home/maha/Desktoproot@Ubuntu:/home/maha/Desktop# [K]0;root@Ubuntu: /home/maha/Desktoproot@Ubuntu:/home/maha/Desktop# [K]0;root@Ubuntu: /home/maha/Desktoproot@Ubuntu:/home/maha/Desktop# [K]0;root@Ubuntu: /home/maha/Desktoproot@Ubuntu:/home/maha/Desktop# [K]0;root@Ubuntu: /home/maha/Desktoproot@Ubuntu:/home/maha/Desktop# [K]0;root@Ubuntu: /home/maha/Desktoproot@Ubuntu:/home/maha/Desktop# [K]0;root@Ubuntu: /home/maha/Desktoproot@Ubuntu:/home/maha/Desktop# [K]0;root@Ubuntu: /home/maha/Desktoproot@Ubuntu:/home/maha/Desktop# [K]0;root@Ubuntu: /home/maha/Desktoproot@Ubuntu:/home/maha/Desktop# [K]0;root@Ubuntu: /home/maha/Desktoproot@Ubuntu:/home/maha/Desktop# [K]0;root@Ubuntu: /home/maha/Desktoproot@Ubuntu:/home/maha/Desktop# [K]0;root@Ubuntu: /home/maha/Desktoproot@Ubuntu:/home/maha/Desktop# [K]0;root@Ubuntu: /home/maha/Desktoproot@Ubuntu:/home/maha/Desktop# [K]0;root@Ubuntu: /home/maha/Desktoproot@Ubuntu:/home/maha/Desktop# [K]0;root@Ubuntu: /home/maha/Desktoproot@Ubuntu:/home/maha/Desktop# [K]0;root@Ubuntu: /home/maha/Desktoproot@Ubuntu:/home/maha/Desktop# [K]0;root@Ubuntu: /home/maha/Desktoproot@Ubuntu:/home/maha/Desktop# [K]0;root@Ubuntu: /home/maha/Desktoproot@Ubuntu:/home/maha/Desktop# [K]0;root@Ubuntu: /home/maha/Desktoproot@Ubuntu:/home/maha/Desktop# more /proc/interrupts
+[?2004l           CPU0       CPU1       CPU2       
+  0:        136          0          0  IO-APIC   2-edge      timer
+  1:          0       1907          0  IO-APIC   1-edge      i8042
+  8:          0          0          0  IO-APIC   8-edge      rtc0
+  9:          0          0          0  IO-APIC   9-fasteoi   acpi
+ 12:       2246          0          0  IO-APIC  12-edge      i8042
+ 14:          0          0       1992  IO-APIC  14-edge      ata_piix
+ 15:          0          0          0  IO-APIC  15-edge      ata_piix
+ 18:          0          0          1  IO-APIC  18-fasteoi   vmwgfx
+ 19:          0          0       5165  IO-APIC  19-fasteoi   ehci_hcd:usb2, enp0s3
+ 20:          0      36056          0  IO-APIC  20-fasteoi   vboxguest
+ 21:      46401          0          0  IO-APIC  21-fasteoi   ahci[0000:00:0d.0], snd_int
+el8x0
+ 22:          0         25          0  IO-APIC  22-fasteoi   ohci_hcd:usb1
+NMI:          0          0          0   Non-maskable interrupts
+LOC:     185372     553087     198046   Local timer interrupts
+SPU:          0          0          0   Spurious interrupts
+PMI:          0          0          0   Performance monitoring interrupts
+IWI:          6          7          1   IRQ work interrupts
+RTR:          0          0          0   APIC ICR read retries
+RES:       4466       3850       5329   Rescheduling interrupts
+CAL:     190792     167305     192088   Function call interrupts
+TLB:      22388      16438      16133   TLB shootdowns
+TRM:          0          0          0   Thermal event interrupts
+THR:          0          0          0   Threshold APIC interrupts
+DFR:          0          0          0   Deferred Error APIC interrupts
+MCE:          0          0          0   Machine check exceptions
+MCP:          6          6          6   Machine check polls
+ERR:          0
+MIS:          0
+PIN:          0          0          0   Posted-interrupt notification event
+NPI:          0          0          0   Nested posted-interrupt event
+PIW:          0          0          0   Posted-interrupt wakeup event
+[?2004h]0;root@Ubuntu: /home/maha/Desktoproot@Ubuntu:/home/maha/Desktop# ls > Q2.txt
+[?2004l[?2004h]0;root@Ubuntu: /home/maha/Desktoproot@Ubuntu:/home/maha/Desktop# sc[K[Kexit
+[?2004lexit
+
+Script done on 2026-01-17 01:17:27+00:00 [COMMAND_EXIT_CODE="0"]
