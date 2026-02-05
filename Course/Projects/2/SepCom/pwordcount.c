@@ -1,21 +1,18 @@
 /*
- * pwordcount: A Pipe-based WordCount Tool
+ * pwordcount: A Pipe-based WordCount Tool (Project 2)
  *
- * Two processes:
- *   - Process 1 (parent):
- *       1) reads the input file
- *       2) sends file bytes to Process 2 via pipe #1
- *       3) receives the final word count via pipe #2
- *       4) prints the answer
+ * What this program does:
+ *   - Process 1 (parent) reads a text file and sends its bytes to Process 2 using Pipe #1.
+ *   - Process 2 (child) reads those bytes, counts how many words are in the file,
+ *     then sends the integer result back to Process 1 using Pipe #2.
+ *   - Process 1 prints the final word count.
  *
- *   - Process 2 (child):
- *       1) receives file bytes from pipe #1
- *       2) counts words
- *       3) sends the integer result back via pipe #2
- *
- * We use TWO pipes because:
- *   - pipe #1 is parent -> child (file content)
- *   - pipe #2 is child  -> parent (result integer)
+ * Key requirements covered:
+ *   - TWO pipes (parent->child for data, child->parent for result)
+ *   - fork() creates TWO cooperating processes
+ *   - file is read in a loop (supports large files)
+ *   - word counting works even when words are split across chunks (handled in wordcount.c)
+ *   - error checking + clean termination (no weird extra prints on error)
  */
 
 #include <stdio.h>
@@ -27,13 +24,11 @@
 
 #include "wordcount.h"
 
-#define READ_END  0
+#define READ_END 0
 #define WRITE_END 1
-
-/* A chunk size of 4096 is common and works well */
 #define BUF_SIZE 4096
 
-/* Simple helper: print OS error message and exit */
+/* Print system error message and exit */
 static void die_perror(const char *msg)
 {
     perror(msg);
@@ -42,60 +37,48 @@ static void die_perror(const char *msg)
 
 /*
  * write_all:
- * write() is allowed to write fewer bytes than requested.
- * This function keeps writing until everything is sent.
- *
- * This is one of the biggest “robustness” improvements for pipe code.
+ * Pipes do NOT guarantee that write(fd, buf, n) writes all n bytes in one call.
+ * This function keeps writing until every byte is sent (or a real error happens).
  */
 static void write_all(int fd, const void *buf, size_t n)
 {
     const unsigned char *p = (const unsigned char *)buf;
     size_t sent = 0;
 
-    while (sent < n) {
+    while (sent < n)
+    {
         ssize_t w = write(fd, p + sent, n - sent);
-
-        if (w < 0) {
-            if (errno == EINTR) {
-                /* Interrupted by a signal; try again */
-                continue;
-            }
+        if (w < 0)
+        {
+            if (errno == EINTR)
+                continue; /* interrupted: try again */
             die_perror("write");
         }
-
-        /* write() succeeded, w bytes were written */
         sent += (size_t)w;
     }
 }
 
 /*
  * read_all:
- * reads up to n bytes unless EOF occurs.
- * Returns how many bytes were actually read.
- *
- * We use this mainly to read the final integer result safely.
+ * Reads up to n bytes unless EOF occurs first.
+ * We mainly use it to safely read the final integer result from pipe2.
  */
 static size_t read_all(int fd, void *buf, size_t n)
 {
     unsigned char *p = (unsigned char *)buf;
     size_t total = 0;
 
-    while (total < n) {
+    while (total < n)
+    {
         ssize_t r = read(fd, p + total, n - total);
-
-        if (r < 0) {
-            if (errno == EINTR) {
-                /* Interrupted by a signal; try again */
-                continue;
-            }
+        if (r < 0)
+        {
+            if (errno == EINTR)
+                continue; /* interrupted: try again */
             die_perror("read");
         }
-
-        if (r == 0) {
-            /* EOF */
-            break;
-        }
-
+        if (r == 0)
+            break; /* EOF */
         total += (size_t)r;
     }
 
@@ -104,8 +87,12 @@ static size_t read_all(int fd, void *buf, size_t n)
 
 int main(int argc, char *argv[])
 {
-    /* ----- Usability requirement: handle missing filename nicely ----- */
-    if (argc < 2) {
+    /* Make stdout unbuffered so prints from parent/child show up immediately */
+    setvbuf(stdout, NULL, _IONBF, 0);
+
+    /* If user didn't give a file name, print the required usage message */
+    if (argc < 2)
+    {
         printf("Please enter a file name.\n");
         printf("Usage: ./pwordcount <file_name>\n");
         return EXIT_FAILURE;
@@ -113,130 +100,148 @@ int main(int argc, char *argv[])
 
     const char *filename = argv[1];
 
-    int pipe1[2]; /* parent -> child: raw file bytes */
-    int pipe2[2]; /* child -> parent: wordcount integer */
+    int pipe1[2]; /* parent -> child: file bytes */
+    int pipe2[2]; /* child -> parent: word count integer */
 
-    /* ----- Create the two pipes (required by the project spec) ----- */
-    if (pipe(pipe1) == -1) die_perror("pipe(pipe1)");
-    if (pipe(pipe2) == -1) die_perror("pipe(pipe2)");
+    if (pipe(pipe1) == -1)
+        die_perror("pipe(pipe1)");
+    if (pipe(pipe2) == -1)
+        die_perror("pipe(pipe2)");
 
-    /* ----- Fork a child process (Process 2) ----- */
     pid_t pid = fork();
-    if (pid < 0) die_perror("fork");
+    if (pid < 0)
+        die_perror("fork");
 
-    if (pid > 0) {
+    if (pid > 0)
+    {
         /* =========================
          * Process 1 (Parent)
          * ========================= */
 
-        /* Close ends we won't use in the parent */
-        close(pipe1[READ_END]);    /* parent never reads from pipe1 */
-        close(pipe2[WRITE_END]);   /* parent never writes to pipe2 */
+        /* Parent only WRITES to pipe1 and READS from pipe2 */
+        close(pipe1[READ_END]);
+        close(pipe2[WRITE_END]);
 
         printf("Process 1 is reading file \"%s\" now ...\n", filename);
 
-        /* Open the file safely */
         FILE *fp = fopen(filename, "r");
-        if (!fp) {
+        if (!fp)
+        {
+            /*
+             * IMPORTANT FIX:
+             * If we fail to open the file, we must shut down cleanly.
+             * We close the write-end of pipe1 so the child sees EOF and exits quietly.
+             * We also wait for the child so we don't leave a zombie process behind.
+             */
             fprintf(stderr, "Error: cannot open file \"%s\": %s\n", filename, strerror(errno));
 
-            /* Clean up pipes before exiting */
-            close(pipe1[WRITE_END]);
-            close(pipe2[READ_END]);
+            close(pipe1[WRITE_END]); /* child will get EOF immediately */
+            close(pipe2[READ_END]);  /* we won't receive anything */
+
+            waitpid(pid, NULL, 0); /* clean up child process */
             return EXIT_FAILURE;
         }
 
         printf("Process 1 starts sending data to Process 2 ...\n");
 
-        /*
-         * Read file in chunks and stream them into pipe1.
-         * This is correct for both small files and large files.
-         */
+        /* Stream the file into pipe1 in chunks */
         unsigned char buf[BUF_SIZE];
         size_t nread;
 
-        while ((nread = fread(buf, 1, sizeof(buf), fp)) > 0) {
+        while ((nread = fread(buf, 1, sizeof(buf), fp)) > 0)
+        {
             write_all(pipe1[WRITE_END], buf, nread);
         }
 
-        /* Check if fread stopped because of an error */
-        if (ferror(fp)) {
+        /* If fread stopped due to an error, handle it */
+        if (ferror(fp))
+        {
             fprintf(stderr, "Error: failed while reading \"%s\".\n", filename);
             fclose(fp);
+
             close(pipe1[WRITE_END]);
             close(pipe2[READ_END]);
+
+            waitpid(pid, NULL, 0);
             return EXIT_FAILURE;
         }
 
         fclose(fp);
 
-        /*
-         * IMPORTANT: Closing the write end tells the child “no more data”.
-         * If we forget this close(), the child may block forever waiting for EOF.
-         */
+        /* Closing this signals EOF to the child (very important!) */
         close(pipe1[WRITE_END]);
 
-        /* Now receive the integer result from the child via pipe2 */
+        /* Receive the result (an int) from pipe2 */
         int result = 0;
         size_t got = read_all(pipe2[READ_END], &result, sizeof(result));
         close(pipe2[READ_END]);
 
-        if (got != sizeof(result)) {
+        if (got != sizeof(result))
+        {
             fprintf(stderr, "Error: did not receive wordcount result from Process 2.\n");
             waitpid(pid, NULL, 0);
             return EXIT_FAILURE;
         }
 
-        /* Wait for child to finish cleanly (avoid zombie process) */
         waitpid(pid, NULL, 0);
 
         printf("Process 1: The total number of words is %d.\n", result);
         return EXIT_SUCCESS;
-
-    } else {
+    }
+    else
+    {
         /* =========================
          * Process 2 (Child)
          * ========================= */
 
-        /* Close ends we won't use in the child */
-        close(pipe1[WRITE_END]);   /* child never writes to pipe1 */
-        close(pipe2[READ_END]);    /* child never reads from pipe2 */
+        /* Child only READS from pipe1 and WRITES to pipe2 */
+        close(pipe1[WRITE_END]);
+        close(pipe2[READ_END]);
 
-        /*
-         * Read all incoming bytes from the parent until EOF,
-         * and count words as we go.
-         */
         unsigned char buf[BUF_SIZE];
         int total_words = 0;
-        int prev_in_word = 0; /* tracks word split between chunks */
+        int prev_in_word = 0;
 
-        while (1) {
+        /*
+         * Read from pipe1 until EOF.
+         * EOF happens when parent closes pipe1[WRITE_END].
+         */
+        int received_anything = 0;
+        while (1)
+        {
             ssize_t r = read(pipe1[READ_END], buf, sizeof(buf));
-
-            if (r < 0) {
-                if (errno == EINTR) continue;
+            if (r < 0)
+            {
+                if (errno == EINTR)
+                    continue;
                 die_perror("read(pipe1)");
             }
+            if (r == 0)
+                break; /* EOF */
 
-            if (r == 0) {
-                /* EOF: parent closed its write end */
-                break;
-            }
-
+            received_anything = 1;
             total_words += count_words_in_buffer(buf, (size_t)r, &prev_in_word);
         }
 
         close(pipe1[READ_END]);
 
         /*
-         * These messages are printed AFTER receiving completes,
-         * which matches the meaning of the sample output.
+         * If parent couldn't open the file, it closes pipe1 immediately.
+         * In that case, we received nothing and should exit quietly
+         * (so we don't print confusing "Process 2..." messages).
          */
+        if (!received_anything)
+        {
+            close(pipe2[WRITE_END]);
+            return EXIT_FAILURE;
+        }
+
+        /* Normal successful case: print required status messages */
         printf("Process 2 finishes receiving data from Process 1 ...\n");
         printf("Process 2 is counting words now ...\n");
         printf("Process 2 is sending the result back to Process 1 ...\n");
 
-        /* Send the result back to parent via pipe2 */
+        /* Send result back to parent */
         write_all(pipe2[WRITE_END], &total_words, sizeof(total_words));
         close(pipe2[WRITE_END]);
 
