@@ -1,0 +1,334 @@
+/*
+ * COMP7500 - Advanced Operating Systems
+ * Project 3: AUbatch
+ *
+ * Maha
+ * Auburn University
+ *
+ * cmd_parser.c - reads user input and runs the right command
+ *
+ * I modeled this after the commandline_parser.c sample from class.
+ * The command table at the bottom maps command strings to functions,
+ * so adding a new command later is easy.
+ *
+ * The run command is where most of the interesting stuff happens -
+ * it locks the queue, adds the job, sorts by current policy, then
+ * wakes up the dispatcher.
+ */
+
+#define _POSIX_C_SOURCE 200809L
+#define _DEFAULT_SOURCE
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+#include <time.h>
+
+#include "job.h"
+#include "scheduling.h"
+#include "evaluation.h"
+#include "cmd_parser.h"
+
+/* help text shown when user types help */
+static const char *helpmenu[] = {
+    "run <job> <time> <pri>  : submit a job named <job>,",
+    "                          execution time is <time>,",
+    "                          priority is <pri>.",
+    "list                    : display the job status.",
+    "fcfs                    : change the scheduling policy to FCFS.",
+    "sjf                     : change the scheduling policy to SJF.",
+    "priority                : change the scheduling policy to priority.",
+    "test <benchmark> <policy> <num_of_jobs> <arrival_rate>",
+    "     <priority_levels> <min_CPU_time> <max_CPU_time>",
+    "quit                    : exit AUbatch",
+    NULL
+};
+
+int cmd_help(int nargs, char **args) {
+    (void)nargs; (void)args;
+    printf("\n");
+    for (int i = 0; helpmenu[i] != NULL; i++)
+        printf("%s\n", helpmenu[i]);
+    printf("\n");
+    return CMD_OK;
+}
+
+/*
+ * cmd_run - submit a job to the queue
+ * format: run <job_name> <cpu_time> <priority>
+ */
+int cmd_run(int nargs, char **args) {
+    if (nargs != 4) {
+        printf("Usage: run <job> <time> <priority>\n");
+        return CMD_EINVAL;
+    }
+
+    const char *name = args[1];
+    int cpu_time = atoi(args[2]);
+    int priority = atoi(args[3]);
+
+    if (cpu_time <= 0) {
+        printf("Error: execution time must be a positive number\n");
+        return CMD_EINVAL;
+    }
+    if (priority <= 0) {
+        printf("Error: priority must be a positive number\n");
+        return CMD_EINVAL;
+    }
+
+    pthread_mutex_lock(&queue_lock);
+
+    /* wait if the queue is full */
+    while (job_count >= MAX_JOBS)
+        pthread_cond_wait(&queue_not_full, &queue_lock);
+
+    job_add(name, cpu_time, priority);
+    sort_queue(current_policy);
+
+    int wait_time  = compute_expected_wait();
+    int qsize      = job_count;
+
+    const char *pname;
+    if (current_policy == POLICY_SJF)       pname = "SJF";
+    else if (current_policy == POLICY_PRIORITY) pname = "Priority";
+    else                                    pname = "FCFS";
+
+    /* wake up the dispatcher */
+    pthread_cond_signal(&queue_not_empty);
+    pthread_mutex_unlock(&queue_lock);
+
+    printf("Job %s was submitted.\n", name);
+    printf("Total number of jobs in the queue: %d\n", qsize);
+    printf("Expected waiting time: %d seconds\n", wait_time);
+    printf("Scheduling Policy: %s.\n", pname);
+
+    return CMD_OK;
+}
+
+/* cmd_list - show all jobs currently in the queue */
+int cmd_list(int nargs, char **args) {
+    (void)nargs; (void)args;
+    pthread_mutex_lock(&queue_lock);
+    job_print_list();
+    pthread_mutex_unlock(&queue_lock);
+    return CMD_OK;
+}
+
+/*
+ * helper to switch policies without repeating myself three times
+ * skips index 0 if a job is running so we don't preempt it
+ */
+static void switch_policy(int new_policy, const char *pname) {
+    pthread_mutex_lock(&queue_lock);
+    current_policy = new_policy;
+    sort_queue(new_policy);
+    int waiting = job_count_waiting();
+    pthread_mutex_unlock(&queue_lock);
+    printf("Scheduling policy is switched to %s. All the %d waiting jobs have been rescheduled.\n",
+           pname, waiting);
+}
+
+int cmd_fcfs(int nargs, char **args) {
+    (void)nargs; (void)args;
+    switch_policy(POLICY_FCFS, "FCFS");
+    return CMD_OK;
+}
+
+int cmd_sjf(int nargs, char **args) {
+    (void)nargs; (void)args;
+    switch_policy(POLICY_SJF, "SJF");
+    return CMD_OK;
+}
+
+int cmd_priority(int nargs, char **args) {
+    (void)nargs; (void)args;
+    switch_policy(POLICY_PRIORITY, "Priority");
+    return CMD_OK;
+}
+
+/*
+ * cmd_test - automated performance evaluation
+ * format: test <benchmark> <policy> <num_jobs> <arrival_rate>
+ *              <priority_levels> <min_cpu> <max_cpu>
+ *
+ * submits jobs automatically at the given arrival rate, waits for
+ * them all to finish, then prints metrics
+ */
+int cmd_test(int nargs, char **args) {
+    if (nargs != 8) {
+        printf("Usage: test <benchmark> <policy> <num_of_jobs> <arrival_rate> "
+               "<priority_levels> <min_CPU_time> <max_CPU_time>\n");
+        return CMD_EINVAL;
+    }
+
+    const char *benchmark  = args[1];
+    const char *policy_str = args[2];
+    int   num_jobs         = atoi(args[3]);
+    double arrival_rate    = atof(args[4]);
+    int   pri_levels       = atoi(args[5]);
+    int   min_cpu          = atoi(args[6]);
+    int   max_cpu          = atoi(args[7]);
+
+    if (num_jobs <= 0 || pri_levels <= 0 || min_cpu <= 0 ||
+        max_cpu <= 0 || min_cpu > max_cpu || arrival_rate <= 0.0) {
+        printf("Error: check your parameters, something doesn't look right\n");
+        return CMD_EINVAL;
+    }
+
+    /* figure out which policy they want */
+    int new_policy;
+    const char *pname;
+    if (strcmp(policy_str, "fcfs") == 0) {
+        new_policy = POLICY_FCFS;
+        pname = "FCFS";
+    } else if (strcmp(policy_str, "sjf") == 0) {
+        new_policy = POLICY_SJF;
+        pname = "SJF";
+    } else if (strcmp(policy_str, "priority") == 0) {
+        new_policy = POLICY_PRIORITY;
+        pname = "Priority";
+    } else {
+        printf("Error: unknown policy '%s' - use fcfs, sjf, or priority\n", policy_str);
+        return CMD_EINVAL;
+    }
+
+    /* set policy and reset counters for a clean measurement */
+    pthread_mutex_lock(&queue_lock);
+    current_policy = new_policy;
+    reset_metrics();
+    pthread_mutex_unlock(&queue_lock);
+
+    printf("Running test: policy=%s, jobs=%d, arrival_rate=%.2f, cpu=[%d,%d]\n",
+           pname, num_jobs, arrival_rate, min_cpu, max_cpu);
+
+    /* how long to sleep between job submissions */
+    unsigned int interval_us = (unsigned int)(1000000.0 / arrival_rate);
+
+    srand((unsigned int)time(NULL));
+
+    /* submit all the jobs */
+    for (int i = 0; i < num_jobs; i++) {
+        int cpu  = min_cpu + (rand() % (max_cpu - min_cpu + 1));
+        int pri  = 1 + (rand() % pri_levels);
+
+        pthread_mutex_lock(&queue_lock);
+        while (job_count >= MAX_JOBS)
+            pthread_cond_wait(&queue_not_full, &queue_lock);
+        job_add(benchmark, cpu, pri);
+        sort_queue(current_policy);
+        pthread_cond_signal(&queue_not_empty);
+        pthread_mutex_unlock(&queue_lock);
+
+        if (i < num_jobs - 1)
+            usleep(interval_us);
+    }
+
+    printf("All %d jobs submitted, waiting for them to finish...\n", num_jobs);
+
+    /* spin until the queue empties */
+    while (1) {
+        pthread_mutex_lock(&queue_lock);
+        int left = job_count;
+        pthread_mutex_unlock(&queue_lock);
+        if (left == 0) break;
+        usleep(500000);
+    }
+
+    print_performance(num_jobs);
+    return CMD_OK;
+}
+
+/*
+ * cmd_quit - print stats then exit
+ */
+int cmd_quit(int nargs, char **args) {
+    (void)nargs; (void)args;
+
+    /* wait for any in-progress job to finish */
+    while (1) {
+        pthread_mutex_lock(&queue_lock);
+        int left = job_count;
+        pthread_mutex_unlock(&queue_lock);
+        if (left == 0) break;
+        usleep(200000);
+    }
+
+    print_performance(total_submitted);
+
+    aubatch_running = 0;
+    pthread_cond_broadcast(&queue_not_empty);
+    pthread_cond_broadcast(&queue_not_full);
+    exit(0);
+}
+
+/* maps command strings to their functions */
+static struct {
+    const char *name;
+    int (*func)(int nargs, char **args);
+} cmdtable[] = {
+    { "help",     cmd_help     },
+    { "h",        cmd_help     },
+    { "?",        cmd_help     },
+    { "run",      cmd_run      },
+    { "r",        cmd_run      },
+    { "list",     cmd_list     },
+    { "l",        cmd_list     },
+    { "fcfs",     cmd_fcfs     },
+    { "sjf",      cmd_sjf      },
+    { "priority", cmd_priority },
+    { "test",     cmd_test     },
+    { "quit",     cmd_quit     },
+    { "q",        cmd_quit     },
+    { NULL, NULL }
+};
+
+/* tokenize the line and call the matching command */
+static int cmd_dispatch(char *line) {
+    char *args[MAXARGS];
+    int   nargs = 0;
+    char *word, *ctx;
+
+    for (word = strtok_r(line, " \t\n", &ctx);
+         word != NULL;
+         word = strtok_r(NULL, " \t\n", &ctx)) {
+        if (nargs >= MAXARGS) {
+            printf("too many arguments\n");
+            return CMD_E2BIG;
+        }
+        args[nargs++] = word;
+    }
+
+    if (nargs == 0) return CMD_OK;
+
+    for (int i = 0; cmdtable[i].name != NULL; i++) {
+        if (strcmp(args[0], cmdtable[i].name) == 0)
+            return cmdtable[i].func(nargs, args);
+    }
+
+    printf("%s: command not found, type 'help' to see available commands\n", args[0]);
+    return CMD_ENOENT;
+}
+
+/*
+ * run_command_loop - the main prompt loop
+ * just keeps reading lines and dispatching until quit
+ */
+void run_command_loop(void) {
+    char  *line   = NULL;
+    size_t buflen = 0;
+
+    while (aubatch_running) {
+        printf("> ");
+        fflush(stdout);
+
+        if (getline(&line, &buflen, stdin) < 0) {
+            printf("\n");
+            cmd_quit(0, NULL);
+            break;
+        }
+        cmd_dispatch(line);
+    }
+
+    free(line);
+}
