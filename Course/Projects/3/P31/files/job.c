@@ -1,16 +1,3 @@
-/*
- * COMP7500 - Advanced Operating Systems
- * Project 3: AUbatch
- *
- * Maha
- * Auburn University
- *
- * job.c - handles everything related to storing and displaying jobs
- *
- * I keep the queue as a simple array. When a job finishes I just
- * shift everything left by one. Not the most efficient but it works
- * fine for the queue sizes we're dealing with here.
- */
 
 #define _POSIX_C_SOURCE 200809L
 
