@@ -16,7 +16,6 @@ volatile int aubatch_running = 1;
 
 /*
  * sort_queue - reorders the waiting jobs by the given policy
- *
  * If a job is already running at index 0 we leave it alone.
  * Only the waiting jobs behind it get sorted.
  * Using insertion sort - simple enough for this project.
