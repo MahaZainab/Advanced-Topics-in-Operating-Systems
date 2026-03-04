@@ -1,12 +1,3 @@
-/*
- * COMP7500 - Advanced Operating Systems
- * Project 3: AUbatch
- *
- * Maha
- * Auburn University
- *
- * evaluation.h
- */
 
 #ifndef EVALUATION_H
 #define EVALUATION_H
