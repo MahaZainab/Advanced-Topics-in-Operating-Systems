@@ -1,20 +1,4 @@
-/*
- * COMP7500 - Advanced Operating Systems
- * Project 3: AUbatch
- *
- * Maha
- * Auburn University
- *
- * cmd_parser.c - reads user input and runs the right command
- *
- * I modeled this after the commandline_parser.c sample from class.
- * The command table at the bottom maps command strings to functions,
- * so adding a new command later is easy.
- *
- * The run command is where most of the interesting stuff happens -
- * it locks the queue, adds the job, sorts by current policy, then
- * wakes up the dispatcher.
- */
+
 
 #define _POSIX_C_SOURCE 200809L
 #define _DEFAULT_SOURCE
