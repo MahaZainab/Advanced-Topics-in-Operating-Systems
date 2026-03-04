@@ -1,16 +1,4 @@
-/*
- * COMP7500 - Advanced Operating Systems
- * Project 3: AUbatch
- *
- * Maha
- * Auburn University
- *
- * evaluation.c - computes and prints performance metrics
- *
- * turnaround time = finish_time - arrival_time
- * waiting time    = start_time  - arrival_time
- * throughput      = total jobs / total elapsed time
- */
+
 
 #define _POSIX_C_SOURCE 200809L
 
