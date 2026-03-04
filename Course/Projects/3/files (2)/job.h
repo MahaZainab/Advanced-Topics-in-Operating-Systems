@@ -1,12 +1,3 @@
-/*
- * COMP7500 - Advanced Operating Systems
- * Project 3: AUbatch
- *
- * Maha
- * Auburn University
- *
- * job.h - job struct definition and shared queue variables
- */
 
 #ifndef JOB_H
 #define JOB_H
