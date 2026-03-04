@@ -69,7 +69,6 @@ int compute_expected_wait(void)
 
 /*
  * scheduling_thread - producer side
- *
  * Honestly this thread just stays alive in the background.
  * cmd_run() does the real work of adding jobs to the queue
  * since that's where the user types the run command.
