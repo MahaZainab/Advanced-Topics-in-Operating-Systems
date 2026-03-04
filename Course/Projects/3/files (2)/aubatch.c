@@ -13,17 +13,17 @@ int main(void)
 {
     pthread_t sched_tid, disp_tid;
 
-    /* initialize queue and sync primitives first, before any threads */
+    /* initializing queue and sync primitives first, before any threads */
     job_init();
 
-    /* create the scheduling thread (producer) */
+    /* creating the scheduling thread (producer) */
     if (pthread_create(&sched_tid, NULL, scheduling_thread, NULL) != 0)
     {
         perror("failed to create scheduling thread");
         exit(EXIT_FAILURE);
     }
 
-    /* create the dispatching thread (consumer) */
+    /* creating the dispatching thread (consumer) */
     if (pthread_create(&disp_tid, NULL, dispatching_thread, NULL) != 0)
     {
         perror("failed to create dispatching thread");
