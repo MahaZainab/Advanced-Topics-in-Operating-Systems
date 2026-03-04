@@ -1,21 +1,3 @@
-/*
- * COMP7500 - Advanced Operating Systems
- * Project 3: AUbatch
- *
- * Maha
- * Auburn University
- *
- * scheduling.c - the two main threads live here
- *
- * scheduling_thread is the producer - it stays alive while the
- * program runs so the dispatcher has something to sync against.
- * The actual job insertion happens in cmd_parser.c inside cmd_run()
- * because that's where the user input comes from.
- *
- * dispatching_thread is the consumer - it waits for jobs to show
- * up in the queue, runs them with fork/execv, then records the
- * timing info we need for the performance metrics.
- */
 
 #define _POSIX_C_SOURCE 200809L
 
