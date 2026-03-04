@@ -84,7 +84,6 @@ void *scheduling_thread(void *arg)
 
 /*
  * dispatching_thread - consumer side
- *
  * Waits for a job to appear, grabs it, runs it with fork+execv,
  * waits for it to finish, then updates the performance counters.
  * Loops forever until aubatch_running goes to 0.
