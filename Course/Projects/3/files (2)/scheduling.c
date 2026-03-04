@@ -1,21 +1,3 @@
-/*
- * COMP7500 - Advanced Operating Systems
- * Project 3: AUbatch
- *
- * Maha
- * Auburn University
- *
- * scheduling.c - the two main threads live here
- *
- * scheduling_thread is the producer - it stays alive while the
- * program runs so the dispatcher has something to sync against.
- * The actual job insertion happens in cmd_parser.c inside cmd_run()
- * because that's where the user input comes from.
- *
- * dispatching_thread is the consumer - it waits for jobs to show
- * up in the queue, runs them with fork/execv, then records the
- * timing info we need for the performance metrics.
- */
 
 #define _POSIX_C_SOURCE 200809L
 
@@ -39,7 +21,8 @@ volatile int aubatch_running = 1;
  * Only the waiting jobs behind it get sorted.
  * Using insertion sort - simple enough for this project.
  */
-void sort_queue(int policy) {
+void sort_queue(int policy)
+{
     /* figure out where to start sorting from */
     int start = 0;
     if (job_count > 0 && job_queue[0].status == STATUS_RUNNING)
@@ -48,11 +31,13 @@ void sort_queue(int policy) {
     if (job_count - start < 2)
         return; /* nothing to sort */
 
-    for (int i = start + 1; i < job_count; i++) {
+    for (int i = start + 1; i < job_count; i++)
+    {
         job_t key = job_queue[i];
         int j = i - 1;
 
-        while (j >= start) {
+        while (j >= start)
+        {
             int swap = 0;
 
             if (policy == POLICY_SJF)
@@ -62,7 +47,8 @@ void sort_queue(int policy) {
             else
                 break; /* FCFS - keep arrival order, don't touch anything */
 
-            if (!swap) break;
+            if (!swap)
+                break;
             job_queue[j + 1] = job_queue[j];
             j--;
         }
@@ -74,7 +60,8 @@ void sort_queue(int policy) {
  * compute_expected_wait - adds up cpu_time for all jobs in queue
  * used to tell the user how long their new job might wait
  */
-int compute_expected_wait(void) {
+int compute_expected_wait(void)
+{
     int total = 0;
     for (int i = 0; i < job_count; i++)
         total += job_queue[i].cpu_time;
@@ -89,7 +76,8 @@ int compute_expected_wait(void) {
  * since that's where the user types the run command.
  * This thread's job is just to not die until the program exits.
  */
-void *scheduling_thread(void *arg) {
+void *scheduling_thread(void *arg)
+{
     (void)arg;
     while (aubatch_running)
         sleep(1);
@@ -103,10 +91,12 @@ void *scheduling_thread(void *arg) {
  * waits for it to finish, then updates the performance counters.
  * Loops forever until aubatch_running goes to 0.
  */
-void *dispatching_thread(void *arg) {
+void *dispatching_thread(void *arg)
+{
     (void)arg;
 
-    while (aubatch_running) {
+    while (aubatch_running)
+    {
 
         pthread_mutex_lock(&queue_lock);
 
@@ -114,17 +104,18 @@ void *dispatching_thread(void *arg) {
         while (job_count == 0 && aubatch_running)
             pthread_cond_wait(&queue_not_empty, &queue_lock);
 
-        if (!aubatch_running && job_count == 0) {
+        if (!aubatch_running && job_count == 0)
+        {
             pthread_mutex_unlock(&queue_lock);
             break;
         }
 
         /* mark the head job as running and grab a copy of what we need */
-        job_queue[0].status     = STATUS_RUNNING;
+        job_queue[0].status = STATUS_RUNNING;
         job_queue[0].start_time = time(NULL);
 
         char job_name[MAX_NAME_LEN];
-        int  job_cpu = job_queue[0].cpu_time;
+        int job_cpu = job_queue[0].cpu_time;
         strncpy(job_name, job_queue[0].name, MAX_NAME_LEN);
 
         pthread_mutex_unlock(&queue_lock);
@@ -132,10 +123,12 @@ void *dispatching_thread(void *arg) {
         /* fork and run the job */
         pid_t pid = fork();
 
-        if (pid < 0) {
+        if (pid < 0)
+        {
             perror("fork failed");
-
-        } else if (pid == 0) {
+        }
+        else if (pid == 0)
+        {
             /* child - run the job executable */
             char cpu_str[16];
             snprintf(cpu_str, sizeof(cpu_str), "%d", job_cpu);
@@ -149,8 +142,9 @@ void *dispatching_thread(void *arg) {
             /* only gets here if execv fails */
             perror("execv failed");
             exit(EXIT_FAILURE);
-
-        } else {
+        }
+        else
+        {
             /* parent - wait for child to finish */
             waitpid(pid, NULL, 0);
         }
@@ -158,16 +152,16 @@ void *dispatching_thread(void *arg) {
         /* job is done, update the timing data */
         pthread_mutex_lock(&queue_lock);
 
-        time_t finish            = time(NULL);
+        time_t finish = time(NULL);
         job_queue[0].finish_time = finish;
-        job_queue[0].status      = STATUS_DONE;
+        job_queue[0].status = STATUS_DONE;
 
         double turnaround = difftime(finish, job_queue[0].arrival_time);
-        double waiting    = difftime(job_queue[0].start_time, job_queue[0].arrival_time);
+        double waiting = difftime(job_queue[0].start_time, job_queue[0].arrival_time);
 
         total_turnaround += turnaround;
-        total_cpu_time   += (double)job_queue[0].cpu_time;
-        total_waiting    += waiting;
+        total_cpu_time += (double)job_queue[0].cpu_time;
+        total_waiting += waiting;
 
         job_remove_head();
 
