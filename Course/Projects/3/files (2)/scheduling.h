@@ -1,12 +1,3 @@
-/*
- * COMP7500 - Advanced Operating Systems
- * Project 3: AUbatch
- *
- * Maha
- * Auburn University
- *
- * scheduling.h
- */
 
 #ifndef SCHEDULING_H
 #define SCHEDULING_H
