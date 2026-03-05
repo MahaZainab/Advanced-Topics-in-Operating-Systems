@@ -1,0 +1,208 @@
+Script started on 2026-03-04 22:08:07+00:00 [TERM="xterm-256color" TTY="/dev/pts/2" COLUMNS="80" LINES="24"]
+]666;vte.shell.postexec=0\]7;file://Ubuntu/home/maha/Documents/operating%20system/Project3/4/file\]0;maha@Ubuntu:~/Documents/operating system/Project3/4/file\]666;vte.shell.precmd!\[?2004h]0;maha@Ubuntu: ~/Documents/operating system/Project3/4/file[01;32mmaha@Ubuntu[00m:[01;34m~/Documents/operating system/Project3/4/file[00m$  [Kmakr[Ke
+[?2004l]133;C\]666;vte.shell.preexec!\gcc -std=c99 -D_POSIX_C_SOURCE=200809L -Wall -g -c aubatch.c
+gcc -std=c99 -D_POSIX_C_SOURCE=200809L -Wall -g -c scheduling.c
+gcc -std=c99 -D_POSIX_C_SOURCE=200809L -Wall -g -c cmd_parser.c
+gcc -std=c99 -D_POSIX_C_SOURCE=200809L -Wall -g -c job.c
+gcc -std=c99 -D_POSIX_C_SOURCE=200809L -Wall -g -c evaluation.c
+gcc -std=c99 -D_POSIX_C_SOURCE=200809L -Wall -g -o aubatch aubatch.o scheduling.o cmd_parser.o job.o evaluation.o -lpthread
+gcc -std=c99 -D_POSIX_C_SOURCE=200809L -Wall -g -o batch_job batch_job.c
+]666;vte.shell.postexec=0\]7;file://Ubuntu/home/maha/Documents/operating%20system/Project3/4/file\]0;maha@Ubuntu:~/Documents/operating system/Project3/4/file\]666;vte.shell.precmd!\[?2004h]0;maha@Ubuntu: ~/Documents/operating system/Project3/4/file[01;32mmaha@Ubuntu[00m:[01;34m~/Documents/operating system/Project3/4/file[00m$ ./aubatch
+[?2004l]133;C\]666;vte.shell.preexec!\Welcome to Maha's batch job scheduler Version 1.0
+Type 'help' to find more about AUbatch commands.
+> help
+
+run <job> <time> <pri>  : submit a job named <job>,
+                          execution time is <time>,
+                          priority is <pri>.
+list                    : display the job status.
+fcfs                    : change the scheduling policy to FCFS.
+sjf                     : change the scheduling policy to SJF.
+priority                : change the scheduling policy to priority.
+test <benchmark> <policy> <num_of_jobs> <arrival_rate>
+     <priority_levels> <min_CPU_time> <max_CPU_time>
+quit                    : exit AUbatch
+
+> list
+Total number of jobs in the queue: 0
+Scheduling Policy: FCFS.
+(no jobs in queue)
+> fcfs
+Scheduling policy is switched to FCFS. All the 0 waiting jobs have been rescheduled.
+> sjf
+Scheduling policy is switched to SJF. All the 0 waiting jobs have been rescheduled.
+> prooru    iority
+Scheduling policy is switched to Priority. All the 0 waiting jobs have been rescheduled.
+> fooo 
+foo: command not found, type 'help' to see available commands
+> zoo
+zoo: command not found, type 'help' to see available commands
+> quit
+No jobs have been completed yet.
+]666;vte.shell.postexec=0\]7;file://Ubuntu/home/maha/Documents/operating%20system/Project3/4/file\]0;maha@Ubuntu:~/Documents/operating system/Project3/4/file\]666;vte.shell.precmd!\[?2004h]0;maha@Ubuntu: ~/Documents/operating system/Project3/4/file[01;32mmaha@Ubuntu[00m:[01;34m~/Documents/operating system/Project3/4/file[00m$ ./aubatch
+[?2004l]133;C\]666;vte.shell.preexec!\Welcome to Maha's batch job scheduler Version 1.0
+Type 'help' to find more about AUbatch commands.
+> run ./batch_job 3 1
+Job ./batch_job was submitted.
+Total number of jobs in the queue: 1
+Expected waiting time: 3 seconds
+Scheduling Policy: FCFS.
+> run ./batch  ) _job 5 2
+Job ./batch_job was submitted.
+Total number of jobs in the queue: 1
+Expected waiting time: 5 seconds
+Scheduling Policy: FCFS.
+> list
+Total number of jobs in the queue: 0
+Scheduling Policy: FCFS.
+(no jobs in queue)
+> ^[[A^[[B^[[B            ^[[1;5A^[[1;5A^[[1;5A                     run ./batch_job 10 2
+Job ./batch_job was submitted.
+Total number of jobs in the queue: 1
+Expected waiting time: 10 seconds
+Scheduling Policy: FCFS.
+> run ./batch 10 1
+Job ./batch was submitted.
+Total number of jobs in the queue: 2
+Expected waiting time: 20 seconds
+Scheduling Policy: FCFS.
+> run ./batch_job 10 3
+Job ./batch_job was submitted.
+Total number of jobs in the queue: 1
+Expected waiting time: 10 seconds
+Scheduling Policy: FCFS.
+> list
+Total number of jobs in the queue: 1
+Scheduling Policy: FCFS.
+Name                 CPU_Time   Pri   Arrival_time Progress
+./batch_job          10         3     22:10:54     Run
+> sjf
+Scheduling policy is switched to SJF. All the 0 waiting jobs have been rescheduled.
+> list
+Total number of jobs in the queue: 1
+Scheduling Policy: SJF.
+Name                 CPU_Time   Pri   Arrival_time Progress
+./batch_job          10         3     22:10:54     Run
+> fcfs
+Scheduling policy is switched to FCFS. All the 0 waiting jobs have been rescheduled.
+> list
+Total number of jobs in the queue: 0
+Scheduling Policy: FCFS.
+(no jobs in queue)
+> quit
+Total number of job submitted: 5
+Average turnaround time:  5.80 seconds
+Average CPU time:         7.60 seconds
+Average waiting time:     0.20 seconds
+Throughput:               0.048 No./second
+]666;vte.shell.postexec=0\]7;file://Ubuntu/home/maha/Documents/operating%20system/Project3/4/file\]0;maha@Ubuntu:~/Documents/operating system/Project3/4/file\]666;vte.shell.precmd!\[?2004h]0;maha@Ubuntu: ~/Documents/operating system/Project3/4/file[01;32mmaha@Ubuntu[00m:[01;34m~/Documents/operating system/Project3/4/file[00m$ ..[K/aubatch
+[?2004l]133;C\]666;vte.shell.preexec!\Welcome to Maha's batch job scheduler Version 1.0
+Type 'help' to find more about AUbatch commands.
+> run ./batch_job 20 3
+Job ./batch_job was submitted.
+Total number of jobs in the queue: 1
+Expected waiting time: 20 seconds
+Scheduling Policy: FCFS.
+> run ./batch_job 24 1
+Job ./batch_job was submitted.
+Total number of jobs in the queue: 2
+Expected waiting time: 44 seconds
+Scheduling Policy: FCFS.
+> run ./batch_jon b 25 2
+Job ./batch_job was submitted.
+Total number of jobs in the queue: 2
+Expected waiting time: 49 seconds
+Scheduling Policy: FCFS.
+> list
+Total number of jobs in the queue: 2
+Scheduling Policy: FCFS.
+Name                 CPU_Time   Pri   Arrival_time Progress
+./batch_job          24         1     22:12:12     Run
+./batch_job          25         2     22:12:28     
+> priority
+Scheduling policy is switched to Priority. All the 1 waiting jobs have been rescheduled.
+> list
+Total number of jobs in the queue: 2
+Scheduling Policy: Priority.
+Name                 CPU_Time   Pri   Arrival_time Progress
+./batch_job          24         1     22:12:12     Run
+./batch_job          25         2     22:12:28     
+> fcfs
+Scheduling policy is switched to FCFS. All the 0 waiting jobs have been rescheduled.
+> list
+Total number of jobs in the queue: 1
+Scheduling Policy: FCFS.
+Name                 CPU_Time   Pri   Arrival_time Progress
+./batch_job          25         2     22:12:28     Run
+> quit
+Total number of job submitted: 3
+Average turnaround time:  29.67 seconds
+Average CPU time:         23.00 seconds
+Average waiting time:     6.67 seconds
+Throughput:               0.043 No./second
+]666;vte.shell.postexec=0\]7;file://Ubuntu/home/maha/Documents/operating%20system/Project3/4/file\]0;maha@Ubuntu:~/Documents/operating system/Project3/4/file\]666;vte.shell.precmd!\[?2004h]0;maha@Ubuntu: ~/Documents/operating system/Project3/4/file[01;32mmaha@Ubuntu[00m:[01;34m~/Documents/operating system/Project3/4/file[00m$ te[K[K./aubatch[K[K[Ktch
+[?2004l]133;C\]666;vte.shell.preexec!\Welcome to Maha's batch job scheduler Version 1.0
+Type 'help' to find more about AUbatch commands.
+> test ./batch_job fcfs 19 0 1.0 3 2 5
+Running test: policy=FCFS, jobs=10, arrival_rate=1.00, cpu=[2,5]
+Jobs are being submitted in the background. Use 'list' to check status.
+> test ./batch_job
+All 10 jobs submitted. Waiting for completion...
+ sjf                      ^[[D    
+> test ./a batch_job sjf 
+Total number of job submitted: 10
+Average turnaround time:  14.30 seconds
+Average CPU time:         3.40 seconds
+Average waiting time:     10.90 seconds
+Throughput:               0.286 No./second
+>      
+Usage: test <benchmark> <policy> <num_of_jobs> <arrival_rate> <priority_levels> <min_CPU_time> <max_CPU_time>
+> test ./sn jf   batch_job sjf 19 1.9 0 3 2 5
+Running test: policy=SJF, jobs=19, arrival_rate=1.00, cpu=[2,5]
+Jobs are being submitted in the background. Use 'list' to check status.
+> lisy t
+Total number of jobs in the queue: 4
+Scheduling Policy: SJF.
+Name                 CPU_Time   Pri   Arrival_time Progress
+./batch_job          2          2     22:15:08     Run
+./batch_job          2          3     22:15:10     
+./batch_job          3          2     22:15:07     
+./batch_job          4          1     22:15:09     
+> 
+All 19 jobs submitted. Waiting for completion...
+
+Total number of job submitted: 19
+Average turnaround time:  18.63 seconds
+Average CPU time:         3.21 seconds
+Average waiting time:     15.42 seconds
+Throughput:               0.311 No./second
+> test ./batch_job priority 51.   1.0 3 2 4 5
+Running test: policy=Priority, jobs=5, arrival_rate=1.00, cpu=[2,5]
+Jobs are being submitted in the background. Use 'list' to check status.
+> 
+All 5 jobs submitted. Waiting for completion...
+
+> list
+Total number of jobs in the queue: 3
+Scheduling Policy: Priority.
+Name                 CPU_Time   Pri   Arrival_time Progress
+./batch_job          2          2     22:16:35     Run
+./batch_job          4          2     22:16:36     
+./batch_job          4          3     22:16:37     
+> list
+Total number of jobs in the queue: 1
+Scheduling Policy: Priority.
+Name                 CPU_Time   Pri   Arrival_time Progress
+./batch_job          4          3     22:16:37     Run
+> 
+Total number of job submitted: 5
+Average turnaround time:  9.60 seconds
+Average CPU time:         3.80 seconds
+Average waiting time:     5.80 seconds
+Throughput:               0.263 No./second
+> quit
+Total number of job submitted: 34
+]666;vte.shell.postexec=0\]7;file://Ubuntu/home/maha/Documents/operating%20system/Project3/4/file\]0;maha@Ubuntu:~/Documents/operating system/Project3/4/file\]666;vte.shell.precmd!\[?2004h]0;maha@Ubuntu: ~/Documents/operating system/Project3/4/file[01;32mmaha@Ubuntu[00m:[01;34m~/Documents/operating system/Project3/4/file[00m$ exit
+[?2004l]133;C\]666;vte.shell.preexec!\exit
+
+Script done on 2026-03-04 22:17:04+00:00 [COMMAND_EXIT_CODE="0"]
